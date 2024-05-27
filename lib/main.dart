@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:layout10_1/tutorial11_1.dart';
+import 'package:layout10_1/tutorial_12.dart';
 
 void main() {
   runApp(const MyApp());
@@ -125,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),
@@ -164,6 +165,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   const tutorial11_1page = Tutorial11_1Page();
                   return tutorial11_1page;
                 }));
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Go to Tutorial 12'),
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Tutorial12()),
+                );
               },
             )
           ],
