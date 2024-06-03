@@ -42,6 +42,7 @@ class Tutorial12 extends StatefulWidget {
   const Tutorial12({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _Tutorial12State createState() => _Tutorial12State();
 }
 
@@ -58,7 +59,7 @@ class _Tutorial12State extends State<Tutorial12> {
 
     if (response.statusCode == 200) {
       var responseData = json.decode(response.body);
-      print(response.body);
+      //print(response.body);
       if (responseData != null && responseData['list'] != null) {
         setState(() {
           products = responseData['list'];
@@ -70,7 +71,7 @@ class _Tutorial12State extends State<Tutorial12> {
       throw Exception('Failed to load products');
     }
   } catch (e) {
-    print('Error fetching data: $e');
+    throw ('Error fetching data: $e');
   }
 }
 
@@ -81,8 +82,8 @@ class _Tutorial12State extends State<Tutorial12> {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'name': name, 'price': price}),
       );
-      print(response.statusCode);
-      print(response.body);
+      //print(response.statusCode);
+      //print(response.body);
 
       if (response.statusCode == 200) {
         fetchData();
@@ -90,10 +91,29 @@ class _Tutorial12State extends State<Tutorial12> {
         throw Exception('Failed to add product');
       }
     } catch (e) {
-      print('Error adding product: $e');
+      throw('Error adding product: $e');
     }
   }
-
+  
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -140,19 +160,26 @@ class _Tutorial12State extends State<Tutorial12> {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop;
+                      Navigator.of(context).pop();
                     }, 
                     child: const Text('Cancel'),
                   ),
                     TextButton(
-                      onPressed: () {
-                        final String name = nameController.text;
-                        final int price = int.parse(priceController.text);
+                    onPressed: () {
+                      final String name = nameController.text;
+                      final String priceText = priceController.text;
 
-                        addProduct(name, price);
+                      if (name.isEmpty || priceText.isEmpty) {
+                        _showErrorDialog('Both fields are required.');
+                        return;
+                      }
 
-                        Navigator.of(context).pop();
-                      },
+                      final int price = int.parse(priceText);
+                      addProduct(name, price);
+
+                      Navigator.of(context).pop();
+                    },
+
                       child: const Text('Save'),
                     )
                   ]
